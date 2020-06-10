@@ -1,0 +1,1 @@
+<view class="cover image-fit" style="background-image: {{backgroundImage}}; background-color: {{backgroundColor}}"></view>

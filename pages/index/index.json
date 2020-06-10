@@ -1,0 +1,6 @@
+{
+  "usingComponents": {
+    "sform": "../../components/sform/sform",
+    "simage": "../../components/simage/simage"
+  }
+}

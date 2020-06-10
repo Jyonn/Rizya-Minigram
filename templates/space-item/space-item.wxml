@@ -1,0 +1,19 @@
+<template name="space-item">
+  <view class="space-item">
+  <view class="space-item-main">
+    <simage image="{{cover}}"></simage>
+    <view class="space-item--mask cover"></view>
+    <view class="space-item--info-line">
+      <view class="space-item--info-line__avatar" wx:for="{{members}}" wx:for-item="member" wx:key="member">
+        <simage image="{{member}}"></simage>
+      </view>
+    </view>
+    <view class="space-item--visit-line">
+      <text class="space-item--visit-line__visit">{{age}}天</text>
+    </view>
+    <view class="space-item--name-line">
+      <text class="space-item--name-line__name">{{name}}的星球</text>
+    </view>
+  </view>
+  </view>
+</template>

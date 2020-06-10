@@ -1,0 +1,11 @@
+<template name="milestone">
+  <view class="milestone-container">
+  <view class="milestone">
+    <simage image="{{cover}}"></simage>
+    <view class="milestone-container--desc">
+      <text class="milestone-container--desc__name">{{name}}</text>
+      <text class="milestone-container--desc__age">{{duration}}天</text>
+    </view>
+  </view>
+  </view>
+</template>

@@ -1,0 +1,36 @@
+
+.milestone-container {
+  margin-bottom: 30px;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  padding-left: 20px;
+}
+
+.milestone {
+  position: relative;
+  border-radius: 10px;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+}
+
+.milestone-container--desc {
+  position: absolute;
+  bottom: 5px;
+  left: 12px;
+}
+
+.milestone-container--desc__name {
+  font-size: 14px;
+  font-weight: bold;
+  color: white;
+  display: block;
+}
+
+.milestone-container--desc__age {
+  font-size: 16px;
+  color: white;
+  display: block;
+  font-family: 'Share Tech';
+}

@@ -1,0 +1,8 @@
+<template name="member">
+  <view class="member-container">
+    <view class="member-container__avatar">
+      <simage image="{{avatar}}"></simage>
+    </view>
+    <text class="member-container__name">{{name}}</text>
+  </view>
+</template>

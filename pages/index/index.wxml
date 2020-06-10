@@ -1,0 +1,30 @@
+<import src="../../templates/space-item/space-item.wxml"/>
+
+<view class="background cover"></view>
+<view class='system-nav' style="height: {{navHeight}}px;"></view>
+<view class="container" style="height: calc(100% - {{navHeight}}px);">
+  <view class="container--main">
+    <view class="container-header">
+      <text class="container-header__title">访问我的星球</text>
+      <text class="container-header__icon icon-add" bindtap="startCreateSpaceForm"></text>
+    </view>
+    <block wx:if="{{!userInfo}}">
+      <view class="auth">
+        <button open-type="getUserInfo" type="primary" bindgetuserinfo="getUserInfo">获取权限后操作</button>
+      </view>
+    </block>
+    <block wx:else>
+      <swiper class="swpier" circular="{{true}}" previous-margin="30px" easing-function="easeInOutCubic">
+        <swiper-item wx:for="{{spaces}}" wx:for-item="space" wx:key="space_id" data-space-id="{{space.space_id}}" bindtap="navigateSpace">
+          <template is="space-item" data="{{...space}}"></template>
+        </swiper-item>
+      </swiper>
+    </block>
+  </view>
+</view>
+
+<sform 
+  id="sform" 
+  form="{{createSpaceForm}}" 
+  bind:submit="createSpace"
+></sform>

@@ -1,0 +1,68 @@
+@import "/styles/bg.wxss";
+@import "/styles/icon.wxss";
+@import "/styles/share-tech.wxss";
+
+cover-image, cover-view, movable-area, movable-view, scroll-view, swiper, swpier-item, view, icon, progress, rich-text, text, button, checkbox, checkbox-group, editor, form, input, label, picker, picker-view, picker-view-column, radio, radio-group, slider, switch, textarea, audio, camera, image, live-player, live-pusher, video, map, canvas, ad, official-account, open-data, web-view, page {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  letter-spacing: .034em;
+}
+
+page {
+  width: 100vw;
+  height: 100vh;
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+}
+
+view.system-nav {
+  position: relative;
+}
+
+view.container {
+  position: relative;
+  width: 100%;
+  padding-top: 44px;
+}
+
+view.container .container--main {
+  padding: 20px calc(16px + env(safe-area-inset-right)) 12px calc(16px + env(safe-area-inset-left));
+  height: 100%;
+}
+
+.container-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.container-header__title {
+  font-size: 22px;
+  font-weight: bold;
+  color: #6393D5;
+}
+
+.container-header__icon {
+  color: #6393D5;
+  font-size: 20px;
+}
+
+.container-header__button {
+  background-color: #6393D5;
+  color: white;
+  font-size: 16px;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+.cover {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
