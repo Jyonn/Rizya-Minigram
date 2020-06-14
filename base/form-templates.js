@@ -1,12 +1,5 @@
 import {Form} from './form'
 
-class Result {
-  constructor(allow=true, hint=null) {
-    this.allow = allow
-    this.hint = hint
-  }
-}
-
 let lengthChecker = function({maxlength, minlength}) {
   return (value, name) => {
     if (maxlength && value.length > maxlength) {
@@ -89,4 +82,65 @@ let getCreateMilestoneForm = function({today}) {
   })
 }
 
-export {getCreateSpaceForm, getCreateMilestoneForm}
+let getModifySpaceNameForm = function() {
+  return new Form({
+    title: '星球加工厂',
+    finishText: '修改',
+    confirmExit: false,
+  }).addInput({
+    key: 'name',
+    name: '设置星球名称',
+    placeholder: '在此填写…',
+    type: 'input',
+    options: {
+      maxlength: 20,
+    },
+    checker: lengthChecker({maxlength: 20, minlength: 2})
+  })
+}
+
+let getModifyMemberNameForm = function() {
+  return new Form({
+    title: '修改我的昵称',
+    finishText: '修改',
+    confirmExit: false,
+  }).addInput({
+    key: 'name',
+    type: 'input',
+    placeholder: '在此填写昵称…',
+    options: {
+      maxlength: 20,
+    },
+    checker: lengthChecker({maxlength: 20, minlength: 0})
+  })
+}
+
+let getModifyMilestoneForm = function(today) {
+  return new Form({
+    title: '里程碑二次加工厂',
+    finishText: '加工',
+    confirmExit: true,
+    confirmExitText: '是否确认中止加工？',
+  }).addInput({
+    key: 'name',
+    name: '设置里程碑名称',
+    placeholder: '在此填写…',
+    type: 'input',
+    options: {
+      maxlength: 20,
+    },
+    checker: lengthChecker({maxlength: 20, minlength: 2})
+  }).addInput({
+    key: 'start_date',
+    name: '设置里程碑时间',
+    type: 'picker',
+    value: today,
+    options: {
+      mode: 'date',
+      start: '1900-01-01',
+      end: today
+    }
+  })
+}
+
+export {getCreateSpaceForm, getCreateMilestoneForm, getModifySpaceNameForm, getModifyMemberNameForm, getModifyMilestoneForm}

@@ -1,6 +1,7 @@
 {
   "usingComponents": {
     "simage": "../../components/simage/simage",
-    "sform": "../../components/sform/sform"
+    "sform": "../../components/sform/sform",
+    "sbox": "../../components/select-box/select-box"
   }
 }

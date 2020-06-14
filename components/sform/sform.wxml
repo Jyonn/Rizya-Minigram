@@ -2,25 +2,27 @@
 <view class="sform-container {{isFilling ? 'show' : 'hide'}}">
   <view class="sform-container--main">
     <view class="sform-header">
-      <text class="sform-header__last-button" wx:if="{{!isStart}}" bindtap="bindLastStep">上一步</text>
+      <text class="sform-header__last-button" wx:if="{{!isFirstPage}}" bindtap="bindLastStep">上一步</text>
       <text class="sform-header__title">{{form.title}}</text>
-      <!-- <text class="sform-header__next-button {{allowNext ? '' : 'disabled'}}" wx:if="{{!isFinal}}" bindtap="bindNextStep">下一步</text> -->
       <view class="sform-header__final-button {{allowNext ? '' : 'disabled'}}" bindtap="bindNextStep">
-        <text>{{isFinal ? form.finishText : '下一步'}}</text>
+        <text>{{isLastPage ? form.finishText : '下一步'}}</text>
       </view>
     </view>
     <view class="sform-body">
-      <text class="sform-body__name">{{currentInput.name}}</text>
-      <text class="sform-body__hint">{{currentInput.hint}}</text>
-      <input class="sform-body__input" placeholder="{{currentInput.placeholder}}" value="{{currentValue}}" wx:if="{{currentInput.type === 'input'}}" bindinput="bindInputChange"/>
-      <picker class="sform-body__picker" mode="{{currentInput.options.mode}}" value="{{currentValue}}" start="{{currentInput.options.start}}" end="{{currentInput.options.end}}" wx:if="{{currentInput.type === 'picker'}}" bindchange="bindPickerChange">
+      <text class="sform-body__name">{{currentPage.name}}</text>
+      <text class="sform-body__hint">{{currentPage.hint}}</text>
+      <input class="sform-body__input" placeholder="{{currentPage.placeholder}}" value="{{currentValue}}" wx:if="{{currentPage.type === 'input'}}" bindinput="bindInputChange"/>
+      <picker class="sform-body__picker" mode="{{currentPage.options.mode}}" value="{{currentValue}}" start="{{currentPage.options.start}}" end="{{currentPage.options.end}}" wx:if="{{currentPage.type === 'picker'}}" bindchange="bindPickerChange">
         <text class="sform-body__picker__value">{{currentValue}}</text>
       </picker>
-      <view class="sform-body__image" wx:if="{{currentInput.type === 'image'}}">
+      <view class="sform-body__image" wx:if="{{currentPage.type === 'image'}}">
         <view class="sform-body__image-box image-fit default-cover"  bindtap="bindImageChange" style="{{tempOptions.coverStyle}}">
           <view class="sform-body__image--mask cover"></view>
-          <text class="sform-body__image--hint">{{currentInput.placeholder}}</text>
+          <text class="sform-body__image--hint">{{currentPage.placeholder}}</text>
         </view>
+      </view>
+      <view class="sform-body__candidates">
+      
       </view>
       <view class="sform-body__error-hint" wx:if="{{errorHint}}">
         <text>{{errorHint}}</text>

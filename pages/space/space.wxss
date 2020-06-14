@@ -20,12 +20,21 @@
 
 .space-title__edit {
   position: absolute;
-  line-height: 44px;
   width: 30px;
   height: 44px;
-  vertical-align: middle;
   left: 20px;
   color: #6393D5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.space-title__edit--square {
+  width: 30px;
+  height: 30px;
+  border-radius: 15px;
+  overflow: hidden;
+  position: relative;
 }
 
 .section {
@@ -55,7 +64,7 @@
 
 .section-header__icon {
   color: #6393D5;
-  font-size: 16px;
+  font-size: 20px;
 }
 
 .section-main {
@@ -69,4 +78,73 @@
 
 .member-swiper {
   height: 40px;
+}
+
+.member-swiper swiper-item {
+  margin-top: 5px;
+}
+
+.member-info-modify-hint {
+  font-size: 12px;
+  margin: 10px 0 0;
+  color: #888;
+  text-align: right;
+}
+
+.kv-container {
+  position: relative;
+}
+
+.kv-container--kv-item {
+  height: 30px;
+  position: relative;
+  margin-top: 10px;
+}
+
+.kv-container--kv-item:first-child {
+  margin-top: 0;
+}
+
+.kv-container--kv-item__key, .kv-container--kv-item__value, .kv-container--kv-item__icon {
+  position: absolute;
+  height: 30px;
+  line-height: 30px;
+  color: #555;
+  top: 0;
+  vertical-align: middle;
+}
+
+.kv-continer--kv-item__key {
+  left: 0;
+  width: 80px;
+  overflow-x: scroll;
+  font-size: 16px;
+}
+
+.kv-container--kv-item__value {
+  left: 100px;
+  width: calc(100% - 80px - 30px);
+  overflow-x: scroll;
+  font-size: 15px;
+}
+
+.kv-container--kv-item__icon {
+  right: 0;
+  width: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 18px;
+  color: #888;
+}
+
+.exit-modify-mode {
+  display: flex;
+  width: 100%;
+  height: 50px;
+  justify-content: center;
+  align-items: center;
+  font-size: 16px;
+  color: #d66;
+  font-weight: bold;
 }

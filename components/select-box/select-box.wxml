@@ -1,0 +1,20 @@
+<view class="sbox-mask" bindtap="bindCancel" wx:if="{{isShowing}}"></view>
+<view class="sbox-container {{isShowing ? 'show' : 'hide'}}" style="bottom: {{bottomPosition}}px">
+  <view class="sbox-container--main">
+    <view class="sbox-header sbox-item" wx:if="{{showHeader}}">
+      <view class="sbox-header__title sbox-item__value">{{headerText}}</view>
+    </view>
+    <view class="sbox-body">
+      <view class="sbox-item" wx:for="{{choices}}" wx:for-item="choice" data-key="{{choice.key}}" bindtap="bindChoice">
+        <button class="sbox-item__value {{choice.style}}" open-type="{{choice.openType}}">{{choice.value}}</button>
+      </view>
+      <block wx:if="{{showCancel}}">
+        <view class="sbox-item-cancel-gap"></view>
+        <view class="sbox-item" bindtap="bindCancel">
+          <text class="sbox-item__value">{{cancelText}}</text>
+        </view>
+      </block>
+    </view>
+  </view>
+</view>
+

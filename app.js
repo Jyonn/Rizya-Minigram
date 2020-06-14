@@ -8,6 +8,7 @@ App({
     userID: new Subscriber(),
     userInfo: new Subscriber(),
     navHeight: new Subscriber(),
+    currentSpace: null,
   },
 
   onLaunch: function() {

@@ -12,7 +12,7 @@ Page({
     userInfo: null,
     spaces: [],
     navHeight: 20,
-    createSpaceForm: null
+    createSpaceForm: null,
   },
   onLoad: function () {
     this.sform = this.selectComponent('#sform')
@@ -30,6 +30,12 @@ Page({
     })
 
     app.globalData.userID.observed_by(this.getSpaces)
+
+    this.startCreateSpaceForm()
+  },
+
+  onPullDownRefresh() {
+    this.getSpaces()
   },
 
   getSpaces() {
@@ -53,6 +59,10 @@ Page({
   },
 
   navigateSpace: function(e) {
+    // app.globalData.currentSpace = e.currentTarget.dataset.spaceId
+    // wx.switchTab({
+    //   url: `/pages/space/space`,
+    // })
     wx.navigateTo({
       url: `/pages/space/space?spaceId=${e.currentTarget.dataset.spaceId}`,
     })

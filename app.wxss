@@ -1,6 +1,13 @@
 @import "/styles/bg.wxss";
 @import "/styles/icon.wxss";
 @import "/styles/share-tech.wxss";
+@import "/styles/warn.wxss";
+
+::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  color: transparent;
+}
 
 cover-image, cover-view, movable-area, movable-view, scroll-view, swiper, swpier-item, view, icon, progress, rich-text, text, button, checkbox, checkbox-group, editor, form, input, label, picker, picker-view, picker-view-column, radio, radio-group, slider, switch, textarea, audio, camera, image, live-player, live-pusher, video, map, canvas, ad, official-account, open-data, web-view, page {
   box-sizing: border-box;
@@ -31,6 +38,7 @@ view.container {
 view.container .container--main {
   padding: 20px calc(16px + env(safe-area-inset-right)) 12px calc(16px + env(safe-area-inset-left));
   height: 100%;
+  overflow-y: scroll;
 }
 
 .container-header {
@@ -48,7 +56,7 @@ view.container .container--main {
 
 .container-header__icon {
   color: #6393D5;
-  font-size: 20px;
+  font-size: 22px;
 }
 
 .container-header__button {

@@ -53,7 +53,7 @@ class Form {
     return defaultCallback
   }
 
-  addInput({key, name, placeholder, type='input', allowSkip=false, callback, value=null, options, hint, checker}) {
+  addInput({key, name, placeholder, type='input', allowSkip=false, callback, value=null, options, hint, checker, candidates}) {
     this.inputs.push({
       key: key,
       name: name,
@@ -65,6 +65,7 @@ class Form {
       value: value,
       hint: hint,
       checker: checker,
+      candidates: candidates,
     })
     return this
   }
@@ -77,6 +78,11 @@ class Form {
         }
       }
     }
+    return this
+  }
+
+  updateValue(key, value) {
+    return this.updateInput(key, {value: value})
   }
 }
 

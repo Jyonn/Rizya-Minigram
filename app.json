@@ -1,6 +1,7 @@
 {
   "pages": [
     "pages/index/index",
+    "pages/invite/invite",
     "pages/space/space"
   ],
   "window": {

@@ -1,0 +1,48 @@
+@import "../../templates/space-item/space-item.wxss";
+
+.invite-view {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.auth {
+  margin-top: 100px;
+}
+
+.invite-view__inviter-avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 30px;
+  overflow: hidden;
+  position: relative;
+  border: 2px solid #ddd;
+}
+
+.invite-view__inviter-name {
+  font-size: 16px;
+  color: #333;
+  margin-top: 5px;
+}
+
+.invite-view__invite-text {
+  font-size: 14px;
+  color: #888;
+  margin-top: 10px;
+}
+
+.invite-view__space {
+  width: 300px;
+  height: 400px;
+  position: relative;
+  padding-top: 20px;
+}
+
+.space-item {
+  padding: 0
+}
+
+.invite-view__join {
+  margin: 20px 0;
+}

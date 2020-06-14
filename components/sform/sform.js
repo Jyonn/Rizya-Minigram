@@ -10,9 +10,9 @@ Component({
    * 组件的初始数据
    */
   data: {
-    currentInput: null,
-    isStart: true,
-    isFinal: false,
+    currentPage: null,
+    isFirstPage: true,
+    isLastPage: false,
     currentIndex: null,
     currentValue: null,
     allowNext: false,
@@ -28,8 +28,8 @@ Component({
   methods: {
     bindNextStep: function() {
       if (this.data.allowNext) {
-        if (this.data.currentInput.checker) {
-          const result = this.data.currentInput.checker(this.data.currentValue, this.data.currentInput.name)
+        if (this.data.currentPage.checker) {
+          const result = this.data.currentPage.checker(this.data.currentValue, this.data.currentPage.name)
           if (!result[0]) {
             this.setData({
               errorHint: result[1]
@@ -37,12 +37,12 @@ Component({
             return
           }
         }
-        this.data.currentInput.value = this.data.currentValue
-        if (this.data.currentInput.callback && this.data.currentInput.callback.after) {
-          this.data.currentInput.callback.after(this.data.currentInput, this.data.currentIndex, this.data.form)
+        this.data.currentPage.value = this.data.currentValue
+        if (this.data.currentPage.callback && this.data.currentPage.callback.after) {
+          this.data.currentPage.callback.after(this.data.currentPage, this.data.currentIndex, this.data.form)
         }
 
-        if (this.data.isFinal) {
+        if (this.data.isLastPage) {
           this.bindSubmitForm()
         } else {
           this.switchTo(this.data.currentIndex + 1)
@@ -99,9 +99,9 @@ Component({
       }
       this.setData({
         currentIndex: index,
-        isStart: index === 0,
-        isFinal: this.data.form.inputs.length == index + 1,
-        currentInput: input,
+        isFirstPage: index === 0,
+        isLastPage: this.data.form.inputs.length == index + 1,
+        currentPage: input,
         tempOptions: null,
       })
       this.updateValue(input.value)
@@ -112,7 +112,7 @@ Component({
     updateValue(value) {
       this.setData({
         currentValue: value,
-        allowNext: this.data.currentInput.allowSkip || value,
+        allowNext: this.data.currentPage.allowSkip || value,
         errorHint: null,
       })
     },

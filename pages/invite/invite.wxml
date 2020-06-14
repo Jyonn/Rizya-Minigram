@@ -1,0 +1,35 @@
+<import src="../../templates/space-item/space-item.wxml"/>
+
+<view class="background cover"></view>
+<view class='system-nav' style="height: {{navHeight}}px;"></view>
+<view class="container" style="height: calc(100% - {{navHeight}}px);">
+  <block wx:if="{{userInfo}}">
+    <view class="container--main" wx:if="{{ticketSuccess}}">
+      <view class="invite-view">
+        <view class="invite-view__inviter-avatar"> 
+          <simage image="{{avatar}}"></simage>
+        </view>
+        <view class="invite-view__inviter-name">{{name}}</view>
+        <view class="invite-view__invite-text">邀请您加入</view>
+        <view class="invite-view__space">
+          <template is="space-item" data="{{...space}}"></template>
+        </view>
+        <button class="invite-view__join" type="primary" bindtap="bindJoinSpace">立即加入</button>
+      </view>
+    </view>
+    <view class="container--main" wx:else>
+      <view class="warn-view">
+        <view class="warn-view__text">邀请凭证已过期</view>
+        <button class="warn-view__action" type="primary" bindtap="bindBackIndex">回到首页</button>
+      </view>
+    </view>
+  </block>
+  <block wx:else>
+    <view class="container--main">
+      <view class="warn-view">
+        <view class="warn-view__text">需要授权您的信息</view>
+        <button class="warn-view__action" open-type="getUserInfo" type="primary" bindgetuserinfo="getUserInfo">授权我的信息</button>
+      </view>
+    </view>
+  </block>
+</view>
