@@ -84,30 +84,49 @@
   color: #eee;
 }
 
+.sform-body {
+  overflow-y: scroll;
+  height: calc(100% - 34px);
+}
+
+.input-box {
+  margin-bottom: 15px;
+  border: 1px solid #e8e8e8;
+  padding: 10px;
+  border-radius: 5px;
+  transition: 0.5s;
+}
+
+.input-box:hover {
+  border: 1px solid #6b6;
+}
+
 .sform-body__name {
   color: #555;
   margin-bottom: 5px;
   display: block;
   font-weight: bold;
+  font-size: 15px;
 }
 
 .sform-body__hint {
   color: #888;
   margin-bottom: 10px;
   display: block;
+  font-size: 14px;
 }
 
 .sform-body__error-hint {
-  color: white;
-  background-color: #e77;
-  padding: 5px 10px;
-  border-radius: 4px;
+  color: #e66;
+  border-top: 1px solid #f0f0f0;
+  padding-top: 8px;
   margin-top: 5px;
+  text-align: right;
+  font-size: 14px;
 }
 
 .sform-body__input {
   height: 30px;
-
 }
 
 .sform-body__picker {
@@ -120,6 +139,11 @@
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.sform-body__mustFillMark {
+  color: #d66;
+  margin-left: 3px;
 }
 
 .sform-body__image-box {

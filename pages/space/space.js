@@ -205,13 +205,8 @@ Page({
 
   // 创建里程碑
   startCreateMilestoneForm: function() {
-    this.setData({
-      form: getCreateMilestoneForm({
-        today: Time.formatDate(new Date()),
-      }),
-      formID: FormID.CreateMilestone,
-    })
-    this.sform.startFill()
+    this.setData({formID: FormID.CreateMilestone})
+    this.sform.startFill(getCreateMilestoneForm())
   },
 
   createMilestone: function(e) {
@@ -315,11 +310,10 @@ Page({
 
   // 修改星球居民昵称
   startModifyMemberNameForm: function() {
-    this.setData({
-      form: getModifyMemberNameForm().updateValue('name', this.data.space.user.name),
-      formID: FormID.ModifyMemberName,
-    })
-    this.sform.startFill()
+    this.setData({formID: FormID.ModifyMemberName})
+    this.sform.startFill(
+      getModifyMemberNameForm()
+      .updateValue('name', this.data.space.user.name))
   },
 
   modifyMemberName: function(e) {
@@ -496,11 +490,11 @@ Page({
 
   startModifyMilestoneInfoForm: function() {
     const milestone = this.data.currentEditMilestone
-    this.setData({
-      form: getModifyMilestoneForm(Time.formatDate(new Date())).updateValue('name', milestone.name).updateValue('start_date', milestone.start_date),
-      formID: FormID.ModifyMilestone,
-    })
-    this.sform.startFill()
+    this.setData({formID: FormID.ModifyMilestone})
+    this.sform.startFill(
+      getModifyMilestoneForm()
+      .updateValue('name', milestone.name)
+      .updateValue('start_date', milestone.start_date))
   },
 
   // 邀请

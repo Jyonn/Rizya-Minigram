@@ -9,23 +9,25 @@
       </view>
     </view>
     <view class="sform-body">
-      <text class="sform-body__name">{{currentPage.name}}</text>
-      <text class="sform-body__hint">{{currentPage.hint}}</text>
-      <input class="sform-body__input" placeholder="{{currentPage.placeholder}}" value="{{currentValue}}" wx:if="{{currentPage.type === 'input'}}" bindinput="bindInputChange"/>
-      <picker class="sform-body__picker" mode="{{currentPage.options.mode}}" value="{{currentValue}}" start="{{currentPage.options.start}}" end="{{currentPage.options.end}}" wx:if="{{currentPage.type === 'picker'}}" bindchange="bindPickerChange">
-        <text class="sform-body__picker__value">{{currentValue}}</text>
-      </picker>
-      <view class="sform-body__image" wx:if="{{currentPage.type === 'image'}}">
-        <view class="sform-body__image-box image-fit default-cover"  bindtap="bindImageChange" style="{{tempOptions.coverStyle}}">
-          <view class="sform-body__image--mask cover"></view>
-          <text class="sform-body__image--hint">{{currentPage.placeholder}}</text>
+      <view class="input-box" wx:for="{{currentPage.inputs}}" wx:for-item="input" wx:key="key">
+        <view class="sform-body__name" wx:if="{{input.name}}">
+          <text>{{input.name}}</text><text class="sform-body__mustFillMark" wx:if="{{!input.allowSkip}}">*</text>
         </view>
-      </view>
-      <view class="sform-body__candidates">
-      
-      </view>
-      <view class="sform-body__error-hint" wx:if="{{errorHint}}">
-        <text>{{errorHint}}</text>
+        <text class="sform-body__hint" wx:if="{{input.hint}}">{{input.hint}}</text>
+        <input class="sform-body__input" placeholder="{{input.placeholder}}" value="{{input.value}}" wx:if="{{input.type === 'input'}}" data-key="{{input.key}}" bindinput="bindInputChange"/>
+        <picker class="sform-body__picker" mode="{{input.options.mode}}" value="{{input.value}}" start="{{input.options.start}}" end="{{input.options.end}}" wx:if="{{input.type === 'picker'}}" data-key="{{input.key}}" bindchange="bindPickerChange">
+          <text class="sform-body__picker__value">{{input.readableText}}</text>
+        </picker>
+        <view class="sform-body__image" wx:if="{{input.type === 'image'}}">
+          <view class="sform-body__image-box image-fit default-cover"  bindtap="bindImageChange" data-key="{{input.key}}" style="{{input.readableText}}">
+            <view class="sform-body__image--mask cover"></view>
+            <text class="sform-body__image--hint">{{input.placeholder}}</text>
+          </view>
+        </view>
+        <view class="sform-body__candidates">
+        
+        </view>
+        <view class="sform-body__error-hint" wx:if="{{input.errorHint}}">{{input.errorHint}}</view>
       </view>
     </view>
   </view>  

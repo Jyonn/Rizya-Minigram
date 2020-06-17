@@ -10,10 +10,7 @@ class ErrorHandler {
     if (error.hasOwnProperty('msg')) {
       console.log(error)
       error = error.msg
-      wx.showToast({
-        title: error,
-        icon: 'none'
-      })
+      Request.app.showInfo(error, 'error')
     }
     return Promise.reject(error)
   }
@@ -23,9 +20,14 @@ class ErrorHandler {
 
 class Request {
   static token = null
+  static app = null
   
   static saveToken(token) {
     this.token = token
+  }
+
+  static saveApp(app) {
+    this.app = app
   }
 
   static getQueryString(params) {

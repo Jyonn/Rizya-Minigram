@@ -27,7 +27,6 @@
 </view>
 
 <sform 
-  id="sform" 
-  form="{{createSpaceForm}}" 
+  id="sform"
   bind:submit="createSpace"
 ></sform>

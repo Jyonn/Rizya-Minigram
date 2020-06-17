@@ -1,6 +1,7 @@
 import {Request} from './request'
 
 class Service {
+
   // 用户相关API
   static code2session({code}) {
     return Request.get('/user/code', {code: code})

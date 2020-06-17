@@ -94,7 +94,6 @@
 
 <sform 
   id="sform"
-  form="{{form}}"
   bind:submit="bindFormSubmit"
 ></sform>
 

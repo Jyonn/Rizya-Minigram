@@ -30,8 +30,6 @@ Page({
     })
 
     app.globalData.userID.observed_by(this.getSpaces)
-
-    this.startCreateSpaceForm()
   },
 
   onPullDownRefresh() {
@@ -50,12 +48,7 @@ Page({
   },
 
   startCreateSpaceForm: function() {
-    this.setData({
-      createSpaceForm: getCreateSpaceForm({
-        today: Time.formatDate(new Date()),
-      })
-    })
-    this.sform.startFill()
+    this.sform.startFill(getCreateSpaceForm())
   },
 
   navigateSpace: function(e) {

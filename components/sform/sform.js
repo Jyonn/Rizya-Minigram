@@ -2,10 +2,6 @@
 import {Form} from '../../base/form'
 
 Component({
-  properties: {
-    form: Object
-  },
-
   /**
    * 组件的初始数据
    */
@@ -13,44 +9,40 @@ Component({
     currentPage: null,
     isFirstPage: true,
     isLastPage: false,
-    currentIndex: null,
-    currentValue: null,
     allowNext: false,
-    tempOptions: null,
     isFilling: false,
-    errorHint: null,
+    form: null,
   },
   lifetimes: {
-    ready: function() {
-      this.switchTo(0)
-    }
+    ready: function() {}
   },
   methods: {
     bindNextStep: function() {
       if (this.data.allowNext) {
-        if (this.data.currentPage.checker) {
-          const result = this.data.currentPage.checker(this.data.currentValue, this.data.currentPage.name)
-          if (!result[0]) {
-            this.setData({
-              errorHint: result[1]
-            })
-            return
+        let inputs = this.data.form.pages[this.data.currentIndex].inputs
+        for (let i = 0; i < inputs.length; i++) {
+          let input = inputs[i]
+          if (input.checker) {
+            const result = input.checker(input.value)
+            if (!result[0]) {
+              this.updateInput({
+                key: input.key,
+                options: {errorHint: result[1]}
+              })
+              return
+            }
           }
         }
-        this.data.currentPage.value = this.data.currentValue
-        if (this.data.currentPage.callback && this.data.currentPage.callback.after) {
-          this.data.currentPage.callback.after(this.data.currentPage, this.data.currentIndex, this.data.form)
-        }
-
+        
         if (this.data.isLastPage) {
           this.bindSubmitForm()
         } else {
-          this.switchTo(this.data.currentIndex + 1)
+          this.switchPage(this.data.currentIndex + 1)
         }
       }
     },
     bindLastStep: function() {
-      this.switchTo(this.data.currentIndex - 1)
+      this.switchPage(this.data.currentIndex - 1)
     },
     bindExitForm: function() {
       if (this.properties.form.confirmExit) {
@@ -68,11 +60,7 @@ Component({
       }
     },
     bindSubmitForm: function() {
-      const data = {}
-      this.properties.form.inputs.forEach(input => {
-        data[input.key] = input.value
-      })
-      this.triggerEvent('submit', data)
+      this.triggerEvent('submit', this.data.form.getValueDict())
       this.stopFill()
     },
     bindCancelForm: function() {
@@ -84,45 +72,58 @@ Component({
         isFilling: false,
       })
     },
-    startFill: function() {
-      this.switchTo(0)
+    startFill: function(form) {
+      this.setData({form: form})
+      this.switchPage(0)
       this.setData({isFilling: true})
     },
-    switchTo: function(index=0) {
-      if (!this.data.form) {
-        return
-      }
-
-      const input = this.data.form.inputs[index]
-      if (input.type === 'image') {
-        input.value = null
-      }
+    switchPage: function(index=0) {
+      const page = this.data.form.getJsonPage({index: index, firstLoad: true})
       this.setData({
         currentIndex: index,
         isFirstPage: index === 0,
-        isLastPage: this.data.form.inputs.length == index + 1,
-        currentPage: input,
-        tempOptions: null,
+        isLastPage: this.data.form.pages.length == index + 1,
+        currentPage: page,
       })
-      this.updateValue(input.value)
-      if (input.callback && input.callback.before) {
-        input.callback.before(index, input, this.data.form)
-      }
+      this.allowNextDetect()
     },
-    updateValue(value) {
-      this.setData({
-        currentValue: value,
-        allowNext: this.data.currentPage.allowSkip || value,
-        errorHint: null,
+
+    allowNextDetect: function() {
+      let allowNext = true
+      for (let i = 0; i < this.data.currentPage.inputs.length; i++) {
+        let input = this.data.currentPage.inputs[i]
+        if (!input.allowSkip && !input.value)
+          allowNext = false
+      }
+      this.setData({allowNext: allowNext})
+    },
+
+    updateInput({key, options}) {
+      this.data.form.updateInput(key, options)
+      const page = this.data.form.getJsonPage({index: this.data.currentIndex})
+      this.setData({currentPage: page})
+      this.allowNextDetect()
+    },
+
+    updateValue({key, value}) {
+      this.updateInput({
+        key: key,
+        options: {value: value},
       })
     },
     bindInputChange: function(e) {
-      this.updateValue(e.detail.value)
+      this.updateValue({
+        key: e.currentTarget.dataset.key,
+        value: e.detail.value,
+      })
     },
     bindPickerChange: function(e) {
-      this.updateValue(e.detail.value)
+      this.updateValue({
+        key: e.currentTarget.dataset.key,
+        value: e.detail.value,
+      })
     },
-    bindImageChange: function() {
+    bindImageChange: function(e) {
       wx.chooseImage({
         count: 1,
         sourceType: ['album'],
@@ -136,20 +137,11 @@ Component({
             mask: true,
           })
           const filePath = res.tempFilePaths[0]
-          wx.getFileSystemManager().readFile({
-            filePath: filePath,
-            encoding: 'base64',
-            success: res => {
-              const imageEncoded = 'data:image/png;base64,' + res.data;
-              this.updateValue(filePath)
-              this.setData({
-                tempOptions: {
-                  coverStyle: `background-image: url("${imageEncoded}"); background-position: center center !important`,
-                }
-              })
-              wx.hideLoading()
-            }
+          this.updateValue({
+            key: e.currentTarget.dataset.key,
+            value: filePath,
           })
+          wx.hideLoading()
         },
       })
     }

@@ -9,9 +9,12 @@ App({
     userInfo: new Subscriber(),
     navHeight: new Subscriber(),
     currentSpace: null,
+    infoPrinter: null,
   },
 
   onLaunch: function() {
+    Request.saveApp(this)
+
     wx.login({
       success: res => {
         Service.code2session({code: res.code}).then(resp => {
@@ -57,4 +60,16 @@ App({
       }).then()
     }
   },
+
+  showInfo: function(info, type) {
+    if (this.globalData.infoPrinter) {
+      this.globalData.infoPrinter(info, type)
+    } else {
+      console.log(info)
+    }
+  },
+
+  setInfoPrinter(infoPrinter) {
+    this.globalData.infoPrinter = infoPrinter;
+  }
 })
