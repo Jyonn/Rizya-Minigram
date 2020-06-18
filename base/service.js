@@ -35,6 +35,10 @@ class Service {
     return Request.get(`/space/${space_id}/cover`)
   }
 
+  static deleteSpace({space_id}) {
+    return Request.delete(`/space/@${space_id}`)
+  }
+
   // 上传图片API
   static uploadImage({key, token, file}) {
     return Request.uploadFile(file, key, token)
@@ -94,13 +98,12 @@ class Service {
   }
 
   static joinSpace({ticket}) {
-    return Request.put(`/space/ticket`, {
-      ticket: ticket
-    })
+    return Request.put(`/space/ticket`, {ticket: ticket})
   }
 
-  static deleteSpace({space_id}) {
-    return Request.delete(`/space/@${space_id}`)
+  // 相册相关API
+  static getAlbumInfo({album_id}) {
+    return Request.get(`/album/@${album_id}`)
   }
 }
 

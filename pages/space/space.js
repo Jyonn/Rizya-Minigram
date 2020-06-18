@@ -1,6 +1,7 @@
 import {Service} from '../../base/service'
 import {getCreateMilestoneForm, getModifySpaceNameForm, getModifyMemberNameForm, getModifyMilestoneForm} from '../../base/form-templates'
-import {Time} from "../../base/time"
+import { Album } from '../../base/album'
+import {Subscriber} from "../../base/subscriber"
 
 const app = getApp()
 
@@ -54,7 +55,8 @@ Page({
         avatar: null,
         name: null,
         is_owner: false,
-      }
+      },
+      album: null
     },
     form: null,
     formID: null,
@@ -62,12 +64,29 @@ Page({
     memberShow: 1,
     isEditMode: false,
     sboxNormalMode: null,
+    currentAlbum: {
+      grid_rows: 6,
+      images: [],
+      album_id: null,
+      albums: [],
+      name: null,
+      cover: null,
+    },
+    averageSize: 0,
   },
 
   onLoad: function (options) {
     this.sbox = this.selectComponent('#sbox')
     this.sform = this.selectComponent('#sform')
     this.sboxNormal = this.selectComponent('#sboxNormal')
+    this.albumSize = new Subscriber()
+
+    this.createSelectorQuery()
+    .select('#album')
+    .boundingClientRect(rect => {
+      console.log(this.albumSize)
+      this.albumSize.subscribe(rect)
+    }).exec()
 
     this.setData({
       spaceId: options.spaceId,
@@ -93,6 +112,13 @@ Page({
 
   },
 
+  showAlbum: function() {
+    this.albumSize.observed_by(rect => {
+      let size = Math.floor(rect.height / this.data.currentAlbum.grid_rows)
+      this.setData({averageSize: size})
+    })
+  },
+
   navigateToIndex: function() {
     wx.navigateTo({
       url: '/pages/index/index',
@@ -106,14 +132,18 @@ Page({
       if (memberShow > 5) {
         memberShow = 5
       }
+
+      let album = new Album(resp.album.images, resp.album.grid_rows)
       this.setData({
         space: resp,
         memberHeight: memberShow * 45 - 5,
         memberShow: memberShow,
+        "currentAlbum.images": album.items,
+        albumMaxWidth: album.maxWidth,
       })
+      this.showAlbum()
       this.refreshMenu()
     }).catch(error => {
-      console.log(error)
       wx.navigateBack()
     })
   },

@@ -13,81 +13,97 @@
     </view>
   </view>
   <view class="container--main">
-    <block wx:if="{{isEditMode}}">
-      <!-- 退出编辑模式 -->
-      <view class="section">
-        <view class="exit-modify-mode" bindtap="exitEditMode">退出编辑模式</view>
-      </view>
-    </block>
-
-    <block wx:if="{{isEditMode}}">
-      <!-- 个人信息 -->
-      <view class="section">
-        <view class="section-header">
-          <text class="section-header__title">个人信息 Information</text>
-          <text class="section-header__icon"></text>
-        </view>
-        <view class="section-main">
-          <view class="kv-container">
-            <view class="kv-container--kv-item" bindtap="startModifyMemberNameForm">
-              <view class="kv-container--kv-item__key">昵称</view>
-              <view class="kv-container--kv-item__value">{{space.user.name}}</view>
-              <view class="kv-container--kv-item__icon icon-right"></view>
-            </view>
-            <view class="kv-container--kv-item" bindtap="modifyMemberAvatar">
-              <view class="kv-container--kv-item__key">头像</view>
-              <view class="kv-container--kv-item__value">点击更换头像</view>
-              <view class="kv-container--kv-item__icon icon-right"></view>
+    <swiper class="container-swiper">
+      <!-- 相册页面 -->
+      <swiper-item id="album">
+        <view class="album--image-container" style="width: {{albumMaxWidth * averageSize}}px">
+          <view class="album--image-box"wx:for="{{currentAlbum.images}}" wx:key="image_id" wx:for-item="image" style="width: {{image.rect.w * averageSize}}px; height: {{image.rect.h * averageSize}}px; top: {{image.position.y * averageSize}}px; left: {{image.position.x * averageSize}}px; padding: {{averageSize * 0.1}}px">
+            <view class="album--image-box__padding">
+              <simage image="{{image.source}}"></simage>
             </view>
           </view>
-          <view class="member-info-modify-hint">* 修改仅针对此星球生效</view>
         </view>
-      </view>
-    </block>
+      </swiper-item>
 
-    <!-- 居民 -->
-    <view class="section">
-      <view class="section-header">
-        <text class="section-header__title">居民 Members</text>
-      </view>
-      <view class="section-main">
-        <swiper class="member-swiper" circular="{{true}}" autoplay="{{true}}" vertical="{{true}}" style="height: {{memberHeight}}px" display-multiple-items="{{memberShow}}">
-          <swiper-item wx:for="{{space.members}}" wx:for-item="member" data-member="{{member}}" bindtap="startRemoveMemberMenu">
-            <template is="member" data="{{...member}}"></template>
-          </swiper-item>
-        </swiper>
-      </view>
-    </view>
+      <!-- 居民/里程碑页面 -->
+      <swiper-item>
+        <block wx:if="{{isEditMode}}">
+          <!-- 退出编辑模式 -->
+          <view class="section">
+            <view class="exit-modify-mode" bindtap="exitEditMode">退出编辑模式</view>
+          </view>
+        </block>
 
-    <!-- 里程碑 -->
-    <view class="section">
-      <view class="section-header">
-        <text class="section-header__title">里程碑 Milestones</text>
-        <view class="section-header__icon" wx:if="{{isEditMode}}">
-          <text class="icon-add" bindtap="startCreateMilestoneForm"></text>
+        <block wx:if="{{isEditMode}}">
+          <!-- 个人信息 -->
+          <view class="section">
+            <view class="section-header">
+              <text class="section-header__title">个人信息 Information</text>
+              <text class="section-header__icon"></text>
+            </view>
+            <view class="section-main">
+              <view class="kv-container">
+                <view class="kv-container--kv-item" bindtap="startModifyMemberNameForm">
+                  <view class="kv-container--kv-item__key">昵称</view>
+                  <view class="kv-container--kv-item__value">{{space.user.name}}</view>
+                  <view class="kv-container--kv-item__icon icon-right"></view>
+                </view>
+                <view class="kv-container--kv-item" bindtap="modifyMemberAvatar">
+                  <view class="kv-container--kv-item__key">头像</view>
+                  <view class="kv-container--kv-item__value">点击更换头像</view>
+                  <view class="kv-container--kv-item__icon icon-right"></view>
+                </view>
+              </view>
+              <view class="member-info-modify-hint">* 修改仅针对此星球生效</view>
+            </view>
+          </view>
+        </block>
+
+        <!-- 居民 -->
+        <view class="section">
+          <view class="section-header">
+            <text class="section-header__title">居民 Members</text>
+          </view>
+          <view class="section-main">
+            <swiper class="member-swiper" circular="{{true}}" autoplay="{{true}}" vertical="{{true}}" style="height: {{memberHeight}}px" display-multiple-items="{{memberShow}}">
+              <swiper-item wx:for="{{space.members}}" wx:for-item="member" data-member="{{member}}" bindtap="startRemoveMemberMenu">
+                <template is="member" data="{{...member}}"></template>
+              </swiper-item>
+            </swiper>
+          </view>
         </view>
-      </view>
-      <view class="section-main scroll-x">
-        <swiper circular="{{true}}" previous-margin="30px" easing-function="easeInOutCubic" autoplay="{{true}}" display-multiple-items="{{space.milestones.length < 2 ? 1 : 2}}">
-          <swiper-item wx:for="{{space.milestones}}" wx:for-item="milestone" bindtap="startEditMilestoneMenu" data-milestone="{{milestone}}">
-            <template is="milestone" data="{{...milestone}}"></template>
-          </swiper-item>
-        </swiper>
-      </view>
-    </view>
 
-    <!-- 相册 -->
-    <view class="section">
-      <view class="section-header">
-        <text class="section-header__title">事件 Events</text>
-        <view class="section-header__icon" wx:if="{{isEditMode}}">
-          <text class="icon-add" bindtap="startCreateEventForm"></text>
+        <!-- 里程碑 -->
+        <view class="section">
+          <view class="section-header">
+            <text class="section-header__title">里程碑 Milestones</text>
+            <view class="section-header__icon" wx:if="{{isEditMode}}">
+              <text class="icon-add" bindtap="startCreateMilestoneForm"></text>
+            </view>
+          </view>
+          <view class="section-main scroll-x">
+            <swiper circular="{{true}}" previous-margin="30px" easing-function="easeInOutCubic" autoplay="{{true}}" display-multiple-items="{{space.milestones.length < 2 ? 1 : 2}}">
+              <swiper-item wx:for="{{space.milestones}}" wx:for-item="milestone" bindtap="startEditMilestoneMenu" data-milestone="{{milestone}}">
+                <template is="milestone" data="{{...milestone}}"></template>
+              </swiper-item>
+            </swiper>
+          </view>
         </view>
-      </view>
-      <view class="section-main scroll-x">
-        
-      </view>
-    </view>
+
+        <!-- 事件 -->
+        <view class="section">
+          <view class="section-header">
+            <text class="section-header__title">事件 Events</text>
+            <view class="section-header__icon" wx:if="{{isEditMode}}">
+              <text class="icon-add" bindtap="startCreateEventForm"></text>
+            </view>
+          </view>
+          <view class="section-main scroll-x">
+            
+          </view>
+        </view>
+      </swiper-item>
+    </swiper>
 
   </view>
 </view>

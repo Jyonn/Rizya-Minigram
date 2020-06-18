@@ -37,6 +37,25 @@
   position: relative;
 }
 
+.container-swiper {
+  width: 100%;
+  height: 100%;
+}
+
+.album--image-container {
+  overflow-x: scroll;
+}
+
+.album--image-box {
+  position: absolute;
+}
+
+.album--image-box__padding {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
 .section {
   position: relative;
   width: 100%;
