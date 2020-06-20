@@ -42,18 +42,84 @@
   height: 100%;
 }
 
+.album-container-header {
+  position: relative;
+  width: 100%;
+  height: 34px;
+  text-align: right;
+}
+
+.album-container-header__icon-box {
+  width: 34px;
+  height: 34px;
+  font-size: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  color: #6393D5;
+}
+
+.album-container-header__icon-box.album-btn-add {
+  right: 34px;
+}
+
+.album-container-header__icon-box.album-btn-more {
+  right: 0;
+}
+
+.album-scroll {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
 .album--image-container {
   overflow-x: scroll;
+  width: 100%;
+  height: 100%;
 }
 
 .album--image-box {
   position: absolute;
+  transition: 0.5s;
+}
+
+.album--image-box.shake:nth-child(2n) {
+  /* animation-name: shake1; */
+  /* animation-iteration-count: infinite; */
+  animation: shake1 0.2s infinite;
+  transform-origin: 50% 10%;
+}
+
+.album--image-box.shake:nth-child(2n+1) {
+  /* animation-name: shake2; */
+  /* animation-iteration-count: infinite; */
+  /* animation-direction: alternate; */
+  animation: shake2 0.2s alternate infinite;
+  transform-origin: 30% 5%;
 }
 
 .album--image-box__padding {
   width: 100%;
   height: 100%;
   position: relative;
+}
+
+.album--image-box__delete {
+  position: absolute;
+  left: -5px;
+  top: -5px;
+  /* border: 1px solid #888; */
+  border-radius: 10px;
+  width: 20px;
+  height: 20px;
+  font-size: 12px;
+  color: black;
+  background-color: rgba(128, 128, 128, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .section {
@@ -63,6 +129,22 @@
   background-color: white;
   border-radius: 5px;
   margin-bottom: 20px;
+}
+
+.section.only-header {
+  margin-bottom: 0;
+}
+
+.section.album-sction {
+  height: 100%;
+  width: 100%;
+  position: relative;
+}
+
+.section.album-sction .section-main {
+  height: calc(100% - 66px);
+  width: 100%;
+  padding: 10px 0;
 }
 
 .section-header {
@@ -75,20 +157,57 @@
   align-items: center;
 }
 
+.section-header__left {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.section-header__left .icon-back {
+  color: #6393D5;
+  font-size: 20px;
+  padding: 0 10px;
+  height: 100%;
+}
+
+.section.only-header .section-header {
+  border-bottom: none;
+}
+
 .section-header__title {
   color: #6393D5;
   font-size: 18px;
   font-family: 'Share Tech';
+  display: flex;
+  flex-direction: column;
 }
 
-.section-header__icon {
+.section-header__title text {
+  display: block;
+}
+
+.section-header__title .main-title {
+  font-size: 16px;
+}
+
+.section-header__title .sub-title {
+  font-size: 13px;
+  color: #555;
+}
+
+.section-header__icon-box {
   color: #6393D5;
   font-size: 20px;
+}
+
+.section-header__icon-box text {
+  margin-left: 20px;
 }
 
 .section-main {
   padding: 10px 0 20px;
 }
+
 
 .section-main.scroll-x {
   overflow-x: scroll;

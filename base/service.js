@@ -105,6 +105,34 @@ class Service {
   static getAlbumInfo({album_id}) {
     return Request.get(`/album/@${album_id}`)
   }
+
+  static updateAlbumInfo({album_id, name, grid_rows}) {
+    return Request.put(`/album/@${album_id}`, {
+      name: name,
+      grid_rows: grid_rows,
+    })
+  }
+
+  static deleteAlbumImage({image_id}) {
+    return Request.delete(`/image/@${image_id}`)
+  }
+
+  static deleteAlbum({album_id}) {
+    return Request.delete(`/album/@${album_id}`)
+  }
+
+  static createAlbum({album_id, name, grid_rows}) {
+    return Request.post(`/album/@${album_id}`, {
+      name: name,
+      grid_rows: grid_rows,
+    })
+  }
+
+  static getAlbumImageToken({album_id, image_num}) {
+    return Request.get(`/album/@${album_id}/image-token`, {
+      image_num: image_num,
+    })
+  }
 }
 
 export {Service}

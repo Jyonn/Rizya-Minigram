@@ -1,5 +1,5 @@
 import {Service} from '../../base/service'
-import {getCreateMilestoneForm, getModifySpaceNameForm, getModifyMemberNameForm, getModifyMilestoneForm} from '../../base/form-templates'
+import {getCreateMilestoneForm, getModifySpaceNameForm, getModifyMemberNameForm, getModifyMilestoneForm, getCreateAlbumForm, getModifyAlbumForm} from '../../base/form-templates'
 import { Album } from '../../base/album'
 import {Subscriber} from "../../base/subscriber"
 
@@ -9,6 +9,8 @@ class FormID {
   static CreateMilestone = 'createMilestone'
   static ModifyMemberName = 'modifyMembername'
   static ModifyMilestone = 'modifyMilestone'
+  static CreateAlbum = 'createAlbum'
+  static ModifyAlbum = 'modifyAlbum'
 }
 
 // 主菜单
@@ -24,6 +26,7 @@ class SboxMode {
   static RemoveMember = 'removeMember'
   static MoreOptions = 'moreOptions'
   static EditMilestone = 'editMilestone'
+  static Album = 'album'
 }
 
 // 移除成员菜单
@@ -37,11 +40,21 @@ class MoreOptionsChoice {
   static LeaveSpace = 'leaveSpace'
 }
 
+// 编辑里程碑菜单
 class EditMilestoneChoice {
   static ModifyInfo = 'modifyInfo'
   static ModifyCover = 'modifyCover'
   static SetDefault = 'setDefault'
   static Delete = 'delete'
+}
+
+// 相册菜单
+class AlbumChoice {
+  static NewSubAlbum = 'newSubAlbum'
+  static UploadImage = 'uploadImage'
+  static ManageAlbum = 'manageAlbum'
+  static DeleteAlbum = 'deleteAlbum'
+  static ModifyAlbum = 'modifyAlbum'
 }
 
 Page({
@@ -66,27 +79,34 @@ Page({
     sboxNormalMode: null,
     currentAlbum: {
       grid_rows: 6,
-      images: [],
+      items: [],
       album_id: null,
       albums: [],
       name: null,
       cover: null,
     },
     averageSize: 0,
+    isManageImage: false,
+    uploadImageInfo: {
+      isUploading: false,
+      totalCount: 0,
+      uploadedCount: 0,
+    }
   },
 
-  onLoad: function (options) {
+  onLoad: function (options) {    
     this.sbox = this.selectComponent('#sbox')
     this.sform = this.selectComponent('#sform')
     this.sboxNormal = this.selectComponent('#sboxNormal')
     this.albumSize = new Subscriber()
 
-    this.createSelectorQuery()
-    .select('#album')
-    .boundingClientRect(rect => {
-      console.log(this.albumSize)
-      this.albumSize.subscribe(rect)
-    }).exec()
+    setTimeout(() => {
+      this.createSelectorQuery()
+      .select('#album')
+      .boundingClientRect(rect => {
+        this.albumSize.subscribe(rect)
+      }).exec()
+    }, 1000)
 
     this.setData({
       spaceId: options.spaceId,
@@ -112,10 +132,38 @@ Page({
 
   },
 
-  showAlbum: function() {
+  getAlbumInfo: function(album_id) {
+    Service.getAlbumInfo({album_id: album_id}).then(resp => {
+      this.displayAlbum(resp)
+    })
+  },
+
+  displayAlbum: function(albumData, reMatch=true) {
+    let currentAlbum = albumData
+    if (reMatch) {
+      this.album = new Album(albumData.items, albumData.grid_rows)
+    } else {
+      this.album.updateGrids()
+    }
+    currentAlbum.items = this.album.items
+    this.setData({
+      currentAlbum: currentAlbum,
+      albumMaxWidth: this.album.maxWidth,
+    })
     this.albumSize.observed_by(rect => {
       let size = Math.floor(rect.height / this.data.currentAlbum.grid_rows)
       this.setData({averageSize: size})
+    })
+  },
+
+  addAlbumItems(items) {
+    let currentAlbum = this.data.currentAlbum
+    this.album.matchGrids(items)
+    this.album.items = this.album.items.concat(items)
+    currentAlbum.items = this.album.items
+    this.setData({
+      currentAlbum: currentAlbum,
+      albumMaxWidth: this.album.maxWidth,
     })
   },
 
@@ -132,18 +180,19 @@ Page({
       if (memberShow > 5) {
         memberShow = 5
       }
+      for (let member of resp.members) {
+        member.user_id = member.user.user_id
+      }
 
-      let album = new Album(resp.album.images, resp.album.grid_rows)
       this.setData({
         space: resp,
         memberHeight: memberShow * 45 - 5,
         memberShow: memberShow,
-        "currentAlbum.images": album.items,
-        albumMaxWidth: album.maxWidth,
       })
-      this.showAlbum()
+      this.getAlbumInfo(resp.album)
       this.refreshMenu()
     }).catch(error => {
+      console.log(error)
       wx.navigateBack()
     })
   },
@@ -160,18 +209,18 @@ Page({
     }, {
       key: MenuChoice.MoreOptions,
       value: '更多设置',
-    }, {
-      key: MenuChoice.NavigateIndex,
-      value: '回到首页',
     }]
     this.sbox.setChoices({
       choices: choices,
       showCancel: true,
+      cancelText: '回到首页',
     })
   },
 
   // 显示菜单
   showMenu: function() {
+    wx.vibrateShort()
+    
     Service.getInviteTicket({
       space_id: this.data.spaceId
     }).then(resp => {
@@ -189,8 +238,8 @@ Page({
         return this.startMoreOptionMenu()
       case MenuChoice.StartEditMode:
         return this.startEditMode();
-      case MenuChoice.NavigateIndex:
-        return this.navigateToIndex();
+      // case MenuChoice.NavigateIndex:
+        // return this.navigateToIndex();
     }
   },
 
@@ -211,14 +260,13 @@ Page({
   bindSboxNormalChoice: function(e) {
     switch (this.data.sboxNormalMode) {
       case SboxMode.RemoveMember:
-        this.analyseRemoveMemberChoice(e)
-        break
+        return this.analyseRemoveMemberChoice(e)
       case SboxMode.MoreOptions:
-        this.analyseMoreOptionChoice(e)
-        break
+        return this.analyseMoreOptionChoice(e)
       case SboxMode.EditMilestone:
-        this.analyseEditMilestoneChoice(e)
-        break
+        return this.analyseEditMilestoneChoice(e)
+      case SboxMode.Album:
+        return this.analyseAlbumChoice(e)
     }
   },
 
@@ -230,6 +278,10 @@ Page({
         return this.modifyMemberName(e)
       case FormID.ModifyMilestone:
         return this.updateMilestone(e)
+      case FormID.ModifyAlbum:
+        return this.modifyAlbum(e)
+      case FormID.CreateAlbum:
+        return this.createAlbum(e)
     }
   },
 
@@ -330,7 +382,7 @@ Page({
   },
 
   // 修改空间名称
-  modifySpaceName: function() {
+  startModifySpaceNameForm: function() {
     this.setData({
       form: getModifySpaceNameForm().updateValue('name', this.data.space.name),
       formID: FormID.ModifySpaceName,
@@ -470,7 +522,62 @@ Page({
     }
   },
 
+  // 相册
+  // 菜单
+  startAlbumMenu: function() {
+    this.setData({
+      sboxNormalMode: SboxMode.Album,
+    })
+
+    this.sboxNormal.setChoices({
+      showHeader: true,
+      headerText: '长按图片可进入删除模式',
+      choices: [{
+        key: AlbumChoice.NewSubAlbum,
+        value: '创建相册',
+      }, {
+        key: AlbumChoice.UploadImage,
+        value: '上传照片',
+      }, {
+        key: AlbumChoice.ModifyAlbum,
+        value: '编辑相册信息',
+      }],
+      showCancel: true,
+    }).startShow()
+  },
+
+  analyseAlbumChoice: function(e) {
+    switch (e.detail) {
+      case AlbumChoice.NewSubAlbum:
+        return this.startCreateAlbumForm()
+      case AlbumChoice.ModifyAlbum:
+        return this.startModifyAlbumForm()
+      case AlbumChoice.UploadImage:
+        return this.uploadAlbumImage()
+    }
+  },
+
+  startCreateAlbumForm: function() {
+    this.setData({formID: FormID.CreateAlbum})
+    this.sform.startFill(getCreateAlbumForm())
+  },
+
+  startModifyAlbumForm: function() {
+    const album = this.data.currentAlbum
+    this.setData({formID: FormID.ModifyAlbum})
+    this.sform.startFill(
+      getModifyAlbumForm()
+      .updateValue('name', album.name)
+      .updateValue('grid_rows', album.grid_rows)
+    )
+  },
+
   // 里程碑
+  reStyleAlbum: function() {
+    wx.vibrateShort()
+    this.displayAlbum(this.data.currentAlbum)
+  },
+
   startEditMilestoneMenu: function(e) {
     const milestone = e.currentTarget.dataset.milestone
     const isDefault = milestone.mid === this.data.space.default_milestone
@@ -527,6 +634,41 @@ Page({
       .updateValue('start_date', milestone.start_date))
   },
 
+  createAlbum: function(e) {
+    let data = e.detail
+    data.album_id = this.data.currentAlbum.res_id
+    wx.showLoading({title: '正在加工相册'})
+    Service.createAlbum(data).then(token => {
+      Service.uploadImage({
+        token: token[0],
+        key: token[1],
+        file: data.cover,
+      }).then(resp => {
+        this.addAlbumItems([resp])
+        wx.hideLoading()
+      }).catch(err => {
+        wx.hideLoading()
+      })
+    })
+  },
+
+  modifyAlbum: function(e) {
+    let data = e.detail
+    data.album_id = this.data.currentAlbum.res_id
+    Service.updateAlbumInfo(data).then(resp => {
+      let currentAlbum = this.data.currentAlbum
+      currentAlbum.name = data.name
+      if (currentAlbum.grid_rows !== data.grid_rows) {
+        currentAlbum.grid_rows = data.grid_rows
+        this.displayAlbum(currentAlbum)
+      } else {
+        this.setData({
+          currentAlbum: currentAlbum
+        })
+      }
+    })
+  },
+
   // 邀请
   onShareAppMessage(e) {
     if (e.from == 'button') {
@@ -537,5 +679,112 @@ Page({
       }
       return data
     }
+  },
+
+  previewImage: function(e) {
+    if (this.data.isManageImage)
+      return
+
+    let item = this.data.currentAlbum.items[e.currentTarget.dataset.index]
+    if (item.type === 'image') {
+      wx.previewImage({
+        urls: [item.source.origin],
+      })
+    } else {
+      this.getAlbumInfo(item.res_id)
+    }
+  },
+
+  backParentAlbum: function() {
+    this.getAlbumInfo(this.data.currentAlbum.parent)
+  },
+
+  startManageImage: function() {
+    this.setData({isManageImage: true})
+  },
+
+  doneManageImage: function() {
+    wx.vibrateShort()
+    this.setData({isManageImage: false})
+  },
+
+  deleteImage: function(e) {
+    let data = e.currentTarget.dataset
+    let currentAlbum = this.data.currentAlbum
+    let item = currentAlbum.items[data.index]
+    
+    let deleteString = item.type === 'image' ? '图片' : `「${item.name}」相册`
+    deleteString = `确认删除${deleteString}？`
+
+    wx.showModal({
+      content: deleteString,
+      showCancel: true,
+      success: (res) => {
+        if (res.confirm) {
+          let req
+          if (item.type === 'image')
+            req = Service.deleteAlbumImage({image_id: item.res_id})
+          else
+            req = Service.deleteAlbum({album_id: item.res_id})
+          req.then(resp => {
+            currentAlbum.items.splice(data.index, 1)
+            this.displayAlbum(currentAlbum, false)
+          }).catch(err => {})
+        }
+      }
+    })
+  },
+
+  uploadAlbumImage: function() {
+    wx.chooseImage({
+      count: 99,
+      sourceType: ['album'],
+      sizeType: ['original'],
+      complete: (res) => {
+        if (!res.tempFilePaths) {
+          return 
+        }
+        
+        this.setData({
+          uploadImageInfo: {
+            isUploading: true,
+            totalCount: res.tempFilePaths.length,
+            uploadedCount: 0
+          }
+        })
+
+        Service.getAlbumImageToken({
+          album_id: this.data.currentAlbum.res_id,
+          image_num: res.tempFilePaths.length
+        }). then(tokens => {
+          this.uploadAlbumImageWorker(tokens, res.tempFilePaths).then(images => {
+            this.addAlbumItems(images)
+          })
+          
+        }).catch(error => {
+          
+        })
+      }
+    })
+  },
+
+  uploadAlbumImageWorker: async function(tokens, filePaths) {
+    let images = []
+    let uploadImageInfo = this.data.uploadImageInfo
+
+    for (let index = 0; index < tokens.length; index++) {
+      uploadImageInfo.uploadedCount = index + 1
+      this.setData({uploadImageInfo: uploadImageInfo})
+
+      let token = tokens[index]
+      images.push(await Service.uploadImage({
+        token: token[0],
+        key: token[1],
+        file: filePaths[index],
+      }))
+    }
+    uploadImageInfo.isUploading = false
+    this.setData({uploadImageInfo: uploadImageInfo})
+    return images
   }
 })

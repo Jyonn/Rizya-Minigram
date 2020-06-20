@@ -7,7 +7,7 @@ let inputUserName = {
   options: {
     maxlength: 20,
   },
-  checker: lengthChecker({maxlength: 20, minlength: 0})
+  checker: lengthChecker({maxlength: 20, minlength: 0, object: '昵称'})
 }
 
 export {inputUserName}

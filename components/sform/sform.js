@@ -123,6 +123,12 @@ Component({
         value: e.detail.value,
       })
     },
+    bindSliderChange: function(e) {
+      this.updateValue({
+        key: e.currentTarget.dataset.key,
+        value: e.detail.value,
+      })
+    },
     bindImageChange: function(e) {
       wx.chooseImage({
         count: 1,

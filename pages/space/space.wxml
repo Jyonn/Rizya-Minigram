@@ -14,92 +14,121 @@
   </view>
   <view class="container--main">
     <swiper class="container-swiper">
-      <!-- 相册页面 -->
-      <swiper-item id="album">
-        <view class="album--image-container" style="width: {{albumMaxWidth * averageSize}}px">
-          <view class="album--image-box"wx:for="{{currentAlbum.images}}" wx:key="image_id" wx:for-item="image" style="width: {{image.rect.w * averageSize}}px; height: {{image.rect.h * averageSize}}px; top: {{image.position.y * averageSize}}px; left: {{image.position.x * averageSize}}px; padding: {{averageSize * 0.1}}px">
-            <view class="album--image-box__padding">
-              <simage image="{{image.source}}"></simage>
-            </view>
-          </view>
-        </view>
-      </swiper-item>
-
       <!-- 居民/里程碑页面 -->
       <swiper-item>
-        <block wx:if="{{isEditMode}}">
-          <!-- 退出编辑模式 -->
-          <view class="section">
-            <view class="exit-modify-mode" bindtap="exitEditMode">退出编辑模式</view>
-          </view>
-        </block>
+        <scroll-view scroll-y="{{true}}" scroll-x="{{false}}" style="height: 100%">
+          <block wx:if="{{isEditMode}}">
+            <!-- 退出编辑模式 -->
+            <view class="section">
+              <view class="exit-modify-mode" bindtap="exitEditMode">退出编辑模式</view>
+            </view>
+          </block>
 
-        <block wx:if="{{isEditMode}}">
-          <!-- 个人信息 -->
+          <block wx:if="{{isEditMode}}">
+            <!-- 个人信息 -->
+            <view class="section">
+              <view class="section-header">
+                <text class="section-header__title">个人信息 Information</text>
+                <text class="section-header__icon-box"></text>
+              </view>
+              <view class="section-main">
+                <view class="kv-container">
+                  <view class="kv-container--kv-item" bindtap="startModifyMemberNameForm">
+                    <view class="kv-container--kv-item__key">昵称</view>
+                    <view class="kv-container--kv-item__value">{{space.user.name}}</view>
+                    <view class="kv-container--kv-item__icon icon-right"></view>
+                  </view>
+                  <view class="kv-container--kv-item" bindtap="modifyMemberAvatar">
+                    <view class="kv-container--kv-item__key">头像</view>
+                    <view class="kv-container--kv-item__value">点击更换头像</view>
+                    <view class="kv-container--kv-item__icon icon-right"></view>
+                  </view>
+                </view>
+                <view class="member-info-modify-hint">* 修改仅针对此星球生效</view>
+              </view>
+            </view>
+          </block>
+
+          <!-- 居民 -->
           <view class="section">
             <view class="section-header">
-              <text class="section-header__title">个人信息 Information</text>
-              <text class="section-header__icon"></text>
+              <text class="section-header__title">居民 Members</text>
             </view>
             <view class="section-main">
-              <view class="kv-container">
-                <view class="kv-container--kv-item" bindtap="startModifyMemberNameForm">
-                  <view class="kv-container--kv-item__key">昵称</view>
-                  <view class="kv-container--kv-item__value">{{space.user.name}}</view>
-                  <view class="kv-container--kv-item__icon icon-right"></view>
-                </view>
-                <view class="kv-container--kv-item" bindtap="modifyMemberAvatar">
-                  <view class="kv-container--kv-item__key">头像</view>
-                  <view class="kv-container--kv-item__value">点击更换头像</view>
-                  <view class="kv-container--kv-item__icon icon-right"></view>
-                </view>
-              </view>
-              <view class="member-info-modify-hint">* 修改仅针对此星球生效</view>
+              <swiper class="member-swiper" circular="{{true}}" autoplay="{{true}}" vertical="{{true}}" style="height: {{memberHeight}}px" display-multiple-items="{{memberShow}}">
+                <swiper-item wx:for="{{space.members}}" wx:for-item="member" wx:key="user_id" data-member="{{member}}" bindtap="startRemoveMemberMenu">
+                  <template is="member" data="{{...member}}"></template>
+                </swiper-item>
+              </swiper>
             </view>
           </view>
-        </block>
 
-        <!-- 居民 -->
-        <view class="section">
+          <!-- 里程碑 -->
+          <view class="section">
+            <view class="section-header">
+              <text class="section-header__title">里程碑 Milestones</text>
+              <view class="section-header__icon-box" wx:if="{{isEditMode}}">
+                <text class="icon-add" bindtap="startCreateMilestoneForm"></text>
+              </view>
+            </view>
+            <view class="section-main scroll-x">
+              <swiper circular="{{true}}" previous-margin="30px" easing-function="easeInOutCubic" autoplay="{{true}}" display-multiple-items="{{space.milestones.length < 2 ? 1 : 2}}">
+                <swiper-item wx:for="{{space.milestones}}" wx:for-item="milestone" wx:key="mid" bindtap="startEditMilestoneMenu" data-milestone="{{milestone}}">
+                  <template is="milestone" data="{{...milestone}}"></template>
+                </swiper-item>
+              </swiper>
+            </view>
+          </view>
+
+          <!-- 事件 -->
+          <view class="section">
+            <view class="section-header">
+              <text class="section-header__title">事件 Events</text>
+              <view class="section-header__icon-box" wx:if="{{isEditMode}}">
+                <text class="icon-add" bindtap="startCreateEventForm"></text>
+              </view>
+            </view>
+            <view class="section-main scroll-x">
+              
+            </view>
+          </view>
+        </scroll-view>
+      </swiper-item>
+
+      <!-- 相册页面 -->
+      <swiper-item>
+        <view class="section album-sction">
           <view class="section-header">
-            <text class="section-header__title">居民 Members</text>
+            <view class="section-header__left">
+              <text class="icon-back" wx:if="{{currentAlbum.parent}}" bindtap="backParentAlbum"></text>
+              <view class="section-header__title">
+                <text class="main-title">相册<block wx:if="{{uploadImageInfo.isUploading}}"> | 正在上传 {{uploadImageInfo.uploadedCount}} / {{uploadImageInfo.totalCount}}</block></text>
+                <text class="sub-title">{{currentAlbum.name}}</text>
+              </view>
+            </view>
+            <view class="section-header__icon-box">
+              <block wx:if="{{isManageImage}}">
+                <text class="icon-done" bindtap="doneManageImage"></text>
+              </block>
+              <block wx:else>
+                <text class="icon-graph" bindtap="reStyleAlbum"></text>
+                <text class="icon-more-h" bindtap="startAlbumMenu"></text>
+              </block>
+            </view>
           </view>
           <view class="section-main">
-            <swiper class="member-swiper" circular="{{true}}" autoplay="{{true}}" vertical="{{true}}" style="height: {{memberHeight}}px" display-multiple-items="{{memberShow}}">
-              <swiper-item wx:for="{{space.members}}" wx:for-item="member" data-member="{{member}}" bindtap="startRemoveMemberMenu">
-                <template is="member" data="{{...member}}"></template>
-              </swiper-item>
-            </swiper>
-          </view>
-        </view>
-
-        <!-- 里程碑 -->
-        <view class="section">
-          <view class="section-header">
-            <text class="section-header__title">里程碑 Milestones</text>
-            <view class="section-header__icon" wx:if="{{isEditMode}}">
-              <text class="icon-add" bindtap="startCreateMilestoneForm"></text>
-            </view>
-          </view>
-          <view class="section-main scroll-x">
-            <swiper circular="{{true}}" previous-margin="30px" easing-function="easeInOutCubic" autoplay="{{true}}" display-multiple-items="{{space.milestones.length < 2 ? 1 : 2}}">
-              <swiper-item wx:for="{{space.milestones}}" wx:for-item="milestone" bindtap="startEditMilestoneMenu" data-milestone="{{milestone}}">
-                <template is="milestone" data="{{...milestone}}"></template>
-              </swiper-item>
-            </swiper>
-          </view>
-        </view>
-
-        <!-- 事件 -->
-        <view class="section">
-          <view class="section-header">
-            <text class="section-header__title">事件 Events</text>
-            <view class="section-header__icon" wx:if="{{isEditMode}}">
-              <text class="icon-add" bindtap="startCreateEventForm"></text>
-            </view>
-          </view>
-          <view class="section-main scroll-x">
-            
+            <scroll-view scroll-x="{{true}}" scroll-y="{{false}}" class="album-scroll">
+              <view id="album" class="album--image-container" style="width: {{albumMaxWidth * averageSize}}px">
+                <view class="album--image-box {{isManageImage ? 'shake' : ''}}" wx:for="{{currentAlbum.items}}" wx:key="res_id" wx:for-item="item" wx:for-index="itemIndex" style="width: {{item.grid.w * averageSize}}px; height: {{item.grid.h * averageSize}}px; top: {{item.position.y * averageSize}}px; left: {{item.position.x * averageSize}}px; padding: {{averageSize * 0.1}}px">
+                  <view class="album--image-box__padding">
+                    <view class="cover" style="border-radius: {{averageSize * 0.1}}px; overflow: hidden" bindtap="previewImage" bindlongpress="startManageImage" data-index="{{itemIndex}}">
+                      <simage image="{{item.source}}"></simage>
+                    </view>
+                    <view class="icon-close album--image-box__delete" wx:if="{{isManageImage}}" bindtap="deleteImage" data-id="{{item.res_id}}" data-index="{{itemIndex}}"></view>
+                  </view>
+                </view>
+              </view>
+            </scroll-view>
           </view>
         </view>
       </swiper-item>
@@ -113,7 +142,10 @@
   bind:submit="bindFormSubmit"
 ></sform>
 
-<sbox id="sbox" bind:choice="bindChoiceMenu"
+<sbox 
+  id="sbox" 
+  bind:choice="bindChoiceMenu"
+  bind:cancel="navigateToIndex"
 ></sbox>
 <sbox id="sboxNormal" bind:choice="bindSboxNormalChoice"></sbox>
 

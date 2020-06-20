@@ -5,7 +5,7 @@
       <view class="sbox-header__title sbox-item__value">{{headerText}}</view>
     </view>
     <view class="sbox-body">
-      <view class="sbox-item" wx:for="{{choices}}" wx:for-item="choice" data-key="{{choice.key}}" bindtap="bindChoice">
+      <view class="sbox-item" wx:for="{{choices}}" wx:key="key" wx:for-item="choice" data-key="{{choice.key}}" bindtap="bindChoice">
         <button class="sbox-item__value {{choice.style}}" open-type="{{choice.openType}}">{{choice.value}}</button>
       </view>
       <block wx:if="{{showCancel}}">

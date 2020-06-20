@@ -18,6 +18,7 @@
         <picker class="sform-body__picker" mode="{{input.options.mode}}" value="{{input.value}}" start="{{input.options.start}}" end="{{input.options.end}}" wx:if="{{input.type === 'picker'}}" data-key="{{input.key}}" bindchange="bindPickerChange">
           <text class="sform-body__picker__value">{{input.readableText}}</text>
         </picker>
+        <slider class="sform-body__slider" min="{{input.options.min}}" max="{{input.options.max}}" step="1" block-size="18" show-value="{{input.options.showValue}}" value="{{input.value}}" wx:if="{{input.type === 'slider'}}" data-key="{{input.key}}" bindchange="bindSliderChange"></slider>
         <view class="sform-body__image" wx:if="{{input.type === 'image'}}">
           <view class="sform-body__image-box image-fit default-cover"  bindtap="bindImageChange" data-key="{{input.key}}" style="{{input.readableText}}">
             <view class="sform-body__image--mask cover"></view>

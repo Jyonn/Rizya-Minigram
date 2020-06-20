@@ -2,7 +2,6 @@
 
 import { Service } from "../../base/service"
 import { getCreateSpaceForm } from '../../base/form-templates'
-import {Time} from "../../base/time"
 
 //获取应用实例
 const app = getApp()
@@ -28,7 +27,9 @@ Page({
       this.setData({userInfo: userInfo})
       wx.hideLoading()
     })
+  },
 
+  onShow() {
     app.globalData.userID.observed_by(this.getSpaces)
   },
 
@@ -52,10 +53,6 @@ Page({
   },
 
   navigateSpace: function(e) {
-    // app.globalData.currentSpace = e.currentTarget.dataset.spaceId
-    // wx.switchTab({
-    //   url: `/pages/space/space`,
-    // })
     wx.navigateTo({
       url: `/pages/space/space?spaceId=${e.currentTarget.dataset.spaceId}`,
     })

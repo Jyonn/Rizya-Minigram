@@ -2,6 +2,7 @@ import {Form, FormPage} from './form'
 import {inputSpaceName, inputSpaceTime, inputSpaceCover} from './form-pages/space-page'
 import { inputMilestoneName, inputMilestoneTime } from './form-pages/milestone-page'
 import { inputUserName } from './form-pages/space-user-page'
+import { inputAlbumName, inputAlbumRowSize, inputAlbumCover } from './form-pages/album-page'
 
 let getCreateSpaceForm = function() {
   return new Form({
@@ -54,7 +55,25 @@ let getModifyMilestoneForm = function() {
   })
   .addPage(new FormPage().addInput(inputMilestoneName))
   .addPage(new FormPage().addInput(inputMilestoneTime))
-
 }
 
-export {getCreateSpaceForm, getCreateMilestoneForm, getModifySpaceNameForm, getModifyMemberNameForm, getModifyMilestoneForm}
+let getCreateAlbumForm = function() {
+  return new Form({
+    title: '相册加工厂',
+    finishText: '加工',
+    confirmExit: false,
+  })
+  .addPage(new FormPage().addInput(inputAlbumName).addInput(inputAlbumRowSize))
+  .addPage(new FormPage().addInput(inputAlbumCover))
+}
+
+let getModifyAlbumForm = function() {
+  return new Form({
+    title: '相册加工厂',
+    finishText: '加工',
+    confirmExit: false,
+  })
+  .addPage(new FormPage().addInput(inputAlbumName).addInput(inputAlbumRowSize))
+}
+
+export {getCreateSpaceForm, getCreateMilestoneForm, getModifySpaceNameForm, getModifyMemberNameForm, getModifyMilestoneForm, getCreateAlbumForm, getModifyAlbumForm}

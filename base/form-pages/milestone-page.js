@@ -8,7 +8,7 @@ let inputMilestoneName = {
   options: {
     maxlength: 20,
   },
-  checker: lengthChecker({maxlength: 20, minlength: 2})
+  checker: lengthChecker({maxlength: 20, minlength: 2, object: '里程碑名称'})
 }
 
 let inputMilestoneTime = {

@@ -2,7 +2,7 @@ class Grid {
   constructor(w, h) {
     this.w = w
     this.h = h
-    this.imageSet = new Set()
+    this.itemSet = new Set()
   }
 
   getRadio() {
